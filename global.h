@@ -1,0 +1,42 @@
+#ifndef __GLOBAL_H__
+#define __GLOBAL_H__
+
+#define MAX_TOKEN_SIZE (100)
+
+typedef enum {
+	KEYWORD_TOKEN,        
+	SIGN_TOEKN,
+	IDENTIFIER_TOKEN,
+	NUMBER_TOKEN,
+	STRING_TOKEN,
+	REGEXPRESSION_TOKEN,
+	SPACE_TOKEN,
+	NEWLINE_TOKEN,
+	COMMENT_TOKEN,
+	END_OF_LINE_TOKEN
+} token_type;
+
+typedef enum {
+	INITIAL_STATUS,
+	INSTRING_STATUS,
+	INCOMMENT_STATUS,
+	INNUM_INT_STATUS,
+	INNUM_DOT_STATUS,
+	INNUM_DEC_STATUS,
+	INIDENTIFIER_STATUS,
+	INREGEXP_STATUS,
+	INFINISH_STATUS,
+	INERROR_STATUS
+}lexer_status;
+
+typedef struct {
+	token_type this_type;
+	double value;
+	char str[MAX_TOKEN_SIZE];
+} token;
+
+enum {
+	FALSE,
+	TRUE
+};
+#endif
