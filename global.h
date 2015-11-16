@@ -17,6 +17,22 @@ typedef enum {
 } token_type;
 
 typedef enum {
+	PLUS,
+	MINUS,
+	TIMES,
+	OVER,
+	ASSIGN,
+	LT,
+	GT,
+	LPAREN,
+	RPAREN,
+	SEMI,
+	LTOREQ,
+	GTOREQ,
+	EQUAL
+} sign_token;
+
+typedef enum {
 	INITIAL_STATUS,
 	INSTRING_STATUS,
 	INCOMMENT_STATUS,
