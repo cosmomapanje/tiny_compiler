@@ -95,9 +95,9 @@ static unsigned int hash_ckeyword(const char *str, unsigned int len)
 	return hval;
 }
 
-const char * is_key_word(const char *str, unsigned int len)
+const char *is_key_word(const char *str, unsigned int len)
 { 
-	if(len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH) {
+	if (len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH) {
 		register int key = HASH_FUNC(str, len);
 
 		if (key <= MAX_HASH_VALUE && key >= 0) {

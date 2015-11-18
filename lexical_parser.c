@@ -12,6 +12,15 @@ __attribute__(alway_inline) char isseparator(const char byte)
 		(char) 1 : (char) 0;
 }
 
+static unsigned char get_next_char()
+{
+	/* get one char from instring */
+}
+static void unget_next_char()
+{
+	/* put back one char to instring */
+}
+
 token_type get_token(token *token)
 {
 	token_type current_token_t;
@@ -19,6 +28,7 @@ token_type get_token(token *token)
 	char cc;
 	char only_one_char_sign = TRUE;
 	char skip = FALSE;
+	unsigned char token_len = 0;
 
 	while (status != INFINISH_STATUS) {
 		cc = get_next_char();
@@ -37,12 +47,12 @@ token_type get_token(token *token)
 			} else if (isseparator(cc)) {
 				skip = TRUE;
 			} else {
+				status = INFINISH_STATUS;
 				switch (cc) {
 				case '+':
 					current_token_t = PLUS;
 					break;
-				case '-':
-					current_token_t = MINUS;
+				case '-': current_token_t = MINUS;
 					break;
 				case '*':
 					current_token_t = TIMES;
@@ -51,16 +61,16 @@ token_type get_token(token *token)
 					current_token_t = OVER;
 					break;
 				case '=':
-					only_one_char_sign = FALSE;
 					current_token_t = ASSIGN;
+					status = INSIGN_STATUS;
 					break;
 				case '<':
-					only_one_char_sign = FALSE;
 					current_token_t = LT;
+					status = INSIGN_STATUS;
 					break;
 				case '>':
-					only_one_char_sign = FALSE;
 					current_token_t = GT;
+					status = INSIGN_STATUS;
 					break;
 				case '(':
 					current_token_t = LPAREN;
@@ -78,6 +88,31 @@ token_type get_token(token *token)
 			}
 			break;
 		case INSTRING_STATUS:
+			break;
+		case INSIGN_STATUS:
+			if (current_token_t == LT) {
+				if ('<' == cc) {
+					current_token_t = LSHIFT;
+				} else if ('=' == cc) {
+					current_token_t = LTOREQ;
+				} else {
+				}
+			} else if (current_token_t == GT) {
+				if ('>' == cc) {
+					current_token_t = RSHIFT;
+				} else if ('=' == cc) {
+					current_token_t = RTOREQ;
+				} else {
+				}
+			} else if (current_token_t == ASSIGN) {
+				if ('=' == cc) {
+					current_token_t = EQUAL;
+				} else {
+				}
+			} else {
+				/* no way to get here */
+			}
+			status = INFINISH_STATUS;
 			break;
 		case INCOMMENT_STATUS:
 			skip = TRUE;
@@ -115,6 +150,9 @@ token_type get_token(token *token)
 			}
 			break;
 		case INREGEXP_STATUS:
+			if ('`' == cc) {
+				status = INFINISH_STATUS;
+			}
 			break;
 		case INFINISH_STATUS:
 			break;
@@ -125,8 +163,10 @@ token_type get_token(token *token)
 			break;
 		}
 
+
 		if (INFINISH_STATUS == status) {
 			/* Do some saving token work */	
+			token_buf[token_len] = '\0';
 		}
 	}
 }
