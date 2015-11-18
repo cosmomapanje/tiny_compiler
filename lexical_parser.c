@@ -17,6 +17,7 @@ token_type get_token(token *token)
 	token_type current_token_t;
 	lexer_status status = INITIAL_STATUS;
 	char cc;
+	char only_one_char_sign = TRUE;
 	char skip = FALSE;
 
 	while (status != INFINISH_STATUS) {
@@ -38,26 +39,40 @@ token_type get_token(token *token)
 			} else {
 				switch (cc) {
 				case '+':
+					current_token_t = PLUS;
 					break;
 				case '-':
+					current_token_t = MINUS;
 					break;
 				case '*':
+					current_token_t = TIMES;
 					break;
 				case '/':
+					current_token_t = OVER;
 					break;
 				case '=':
+					only_one_char_sign = FALSE;
+					current_token_t = ASSIGN;
 					break;
 				case '<':
+					only_one_char_sign = FALSE;
+					current_token_t = LT;
 					break;
 				case '>':
+					only_one_char_sign = FALSE;
+					current_token_t = GT;
 					break;
 				case '(':
+					current_token_t = LPAREN;
 					break;
 				case ')':
+					current_token_t = RPAREN;
 					break;
 				case ';':
+					current_token_t = SEMI;
 					break;
 				default:
+					current_token_t = ERROR;
 					break;
 				}
 			}
@@ -66,7 +81,14 @@ token_type get_token(token *token)
 			break;
 		case INCOMMENT_STATUS:
 			skip = TRUE;
-			status = INCOMMENT_STATUS;
+			if ('\n' == cc) {
+				status = INITIAL_STATUS;
+			} else if (EOF == cc) {
+				status == INFINISH_STATUS;
+				current_token_t = ENDFILE;
+			} else {
+				status = INCOMMENT_STATUS;
+			}
 			break;
 		case INNUM_INT_STATUS:
 			if (isdigit(cc)) {
@@ -83,13 +105,13 @@ token_type get_token(token *token)
 			}
 			break;
 		case INNUM_DEC_STATUS:
-			if (isdigit(cc)) {
-			} else {
+			if (!isdigit(cc)) {
+				status = INFINISH_STATUS;
 			}
 			break;
 		case INIDENTIFIER_STATUS:
-			if (isdigit(cc) || isalpha(cc) || ('_' == cc)) {
-			} else {
+			if ((!isdigit(cc)) || (!isalpha(cc)) || ('_' == cc)) {
+				status = INFINISH_STATUS;
 			}
 			break;
 		case INREGEXP_STATUS:
@@ -101,6 +123,10 @@ token_type get_token(token *token)
 			exit(-1);
 		default:
 			break;
+		}
+
+		if (INFINISH_STATUS == status) {
+			/* Do some saving token work */	
 		}
 	}
 }

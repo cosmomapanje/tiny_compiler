@@ -29,7 +29,9 @@ typedef enum {
 	SEMI,
 	LTOREQ,
 	GTOREQ,
-	EQUAL
+	EQUAL,
+	ENDFILE,
+	ERROR
 } sign_token;
 
 typedef enum {
@@ -55,4 +57,5 @@ enum {
 	FALSE,
 	TRUE
 };
+
 #endif
