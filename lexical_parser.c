@@ -164,12 +164,12 @@ token_type get_token(token *token)
 			}
 			break;
 		case INNUM_INT_STATUS:
-			if (isdigit(cc)) {
-				status = INNUM_INT_STATUS;
-			} else if ('.' == cc) {
+			if ('.' == cc) {
 				status = INNUM_DOT_STATUS;
-			} else {
-				status = INERROR_STATUS;
+			} else if (!isdigit(cc)) {
+				status = INFINISH_STATUS;
+				skip = TRUE;
+				unget_next_char();
 			}
 			break;
 		case INNUM_DOT_STATUS:

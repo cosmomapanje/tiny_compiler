@@ -5,12 +5,12 @@
 #define MAX_TOKEN_SIZE (100)
 #define MAX_LINE_SIZE (1024)
 
-#define ENUM_TOKEN_TYPE_NUM (10)
+#define ENUM_TOKEN_TYPE_NUM (11)
 #define ENUM_SIGN_TOKEN_NUM (16)
 
 extern FILE *source_file;
 typedef enum {
-	KEYWORD_TOKEN,        
+	KEYWORD_TOKEN,
 	SIGN_TOEKN,
 	IDENTIFIER_TOKEN,
 	NUMBER_TOKEN,
