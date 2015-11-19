@@ -1,3 +1,4 @@
+#include "global.h"
 
 #define TOTAL_KEYWORDS 32
 #define MIN_WORD_LENGTH 2
@@ -8,7 +9,52 @@
 #ifndef HASH_FUNC
 #define HASH_FUNC hash_ckeyword
 
-static const char * const wordlist[MAX_HASH_VALUE] =
+static const struct _keyword keyword_list[MAX_HASH_VALUE + 1] = {
+	{"", NONE},
+	{"return", RETURN},
+	{"struct", STRUCT},
+	{"if", IF},
+	{"int", INT},
+	{"unsigned", UNSIGNED},
+	{"switch", SWITCH},
+	{"short", SHORT},
+	{"union", UNION},
+	{"static", STATIC},
+	{"continue", CONTINUE},
+	{"const", CONST},
+	{"auto", AUTO},
+	{"extern", EXTERN},
+	{"else", ELSE},
+	{"char", CHAR},
+	{"for", FOR},
+	{"case", CASE},
+	{"signed", SIGNED},
+	{"register", REGISTER},
+	{"do", DO},
+	{"volatile", VOLATILE},
+	{"goto", GOTO},
+	{"void",  VOID},
+	{"break", BREAK},
+	{"sizeof", SIZEOF},
+	{"while", WHILE},
+	{"float", FLOAT},
+	{"typedef", TYPEDEF},
+	{"enum", ENUM},
+	{"", NONE},
+	{"long", LONG},
+	{"double", DOUBLE},
+	{"", NONE},
+	{"", NONE},
+	{"", NONE},
+	{"", NONE},
+	{"", NONE},
+	{"", NONE},
+	{"", NONE},
+	{"", NONE},
+	{"", NONE},
+	{"default", DEFAULT}
+};
+static const char * const wordlist[MAX_HASH_VALUE + 1] =
 {
 	"",
 	"return",
@@ -95,19 +141,20 @@ static unsigned int hash_ckeyword(const char *str, unsigned int len)
 	return hval;
 }
 
-const char *is_key_word(const char *str, unsigned int len)
+unsigned char is_key_word(const char *str, unsigned int len)
 { 
 	if (len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH) {
 		register int key = HASH_FUNC(str, len);
 
 		if (key <= MAX_HASH_VALUE && key >= 0) {
-			register const char *s = wordlist[key];
+			//register const char *s = wordlist[key];
+			register const char *s = keyword_list[key].keyword_str;
 			if (*str == *s && !strcmp (str + 1, s + 1)) {
-				return s;
+				return keyword_list[key].keyword_value;
 			}
 		}
 	}
-	return 0;
+	return NONE;
 }
 
 #ifdef DEBUG_HASH

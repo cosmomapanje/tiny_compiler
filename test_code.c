@@ -1,0 +1,19 @@
+#include <stdio.h>
+#include "global.h"
+#include "lexical_parser.h"
+
+FILE *source_file;
+
+int main()
+{
+	source_file = fopen("./test_file", "rb");
+	token current_token;
+	token_type ttype;
+	for (;;) {
+		ttype = get_token(&current_token);
+		if (END_OF_FILE_TOKEN == ttype) {
+			break;
+		}
+	}
+	return 0;
+}
