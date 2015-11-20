@@ -69,6 +69,7 @@ token_type get_token(token *token)
 			} else if ('`' == cc) {
 				status = INREGEXP_STATUS;
 			} else if ('#' == cc) {
+				skip = TRUE;
 				status = INCOMMENT_STATUS;
 			} else if (isseparator(cc)) {
 				skip = TRUE;
