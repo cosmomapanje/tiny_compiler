@@ -19,7 +19,7 @@ FILE *source;
 
 static char input[256];
 static char *saveptr = input;
-static char *token_symbol[] = {"if","then","else","begin","end","print",";","="}; /* no num */
+
 enum token {
 	IF,
 	THEN,
@@ -28,24 +28,43 @@ enum token {
 	END,
 	PRINT,
 	SEMI,
-	NUM,
-	EQ
+	EQ,
+	NUM
 };
 
+#pragma pack(4)
+
+static struct token_symbols {
+	char *name;
+	int token_value;
+}tokens[] = {{"if", IF}, {"then", THEN}, {"else", ELSE}, {"begin", BEGIN}, {"end", END}, {"print", PRINT}, {";", SEMI}, {"=", EQ}, {"", NUM}};
+
+#pragma pack(8)
+
 enum token tok;
+void token_id(char *token_p)
+{
+	int i = 0;
+	for (; i < (sizeof(tokens)/sizeof(tokens[0])); i++) {
+		if (0 == strcmp(tokens[i].name, token_p))
+			tok = tokens[i].token_value;
+	}
+}
 
 void getToken(void)
 {
-	char *token;
+	char *token_p;
 
 	if (!strlen(saveptr)) {
 		memset(input, '\0', 256);
 		fgets(input, 256, stdin);
 		saveptr = input;
 	}
-	token = strtok_r(NULL, " \n", &saveptr); 
-	if (token == NULL) {
+	token_p = strtok_r(NULL, " \n", &saveptr); 
+	if (token_p == NULL) {
 		getToken();
+	} else {
+		token_id(token_p);
 	}
 }
 
@@ -106,4 +125,9 @@ void E(void)
 	eat(NUM);
 	eat(EQ);
 	eat(NUM);
+}
+
+int main()
+{
+	return 0;
 }
