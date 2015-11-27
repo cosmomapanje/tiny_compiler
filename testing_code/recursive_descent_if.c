@@ -22,7 +22,6 @@
 #define IS_ASCII_NUM(x) ({typeof(x) (__x) = (x);	\
 			(((__x) >= 0x30) && ((__x) <= 0x39)) ? 1 : 0;})
 
-char str[] = "if E then S else S";
 FILE *source;
 
 static char input[256];
