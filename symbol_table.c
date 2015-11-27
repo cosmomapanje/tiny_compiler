@@ -54,44 +54,6 @@ static const struct _keyword keyword_list[MAX_HASH_VALUE + 1] = {
 	{"", NONE},
 	{"default", DEFAULT}
 };
-static const char * const wordlist[MAX_HASH_VALUE + 1] =
-{
-	"",
-	"return",
-	"struct",
-	"if",
-	"int",
-	"unsigned",
-	"switch",
-	"short",
-	"union",
-	"static",
-	"continue",
-	"const",
-	"auto",
-	"extern",
-	"else",
-	"char",
-	"for",
-	"case",
-	"signed",
-	"register",
-	"do",
-	"volatile",
-	"goto",
-	"void",
-	"break",
-	"sizeof",
-	"while",
-	"float",
-	"typedef",
-	"enum",
-	"",
-	"long",
-	"double",
-	"", "", "", "", "", "", "", "", "",
-	"default"
-};
 
 static const unsigned char alphabet_value_for_ckeyword[] =
 {
@@ -147,7 +109,6 @@ unsigned char is_key_word(const char *str, unsigned int len)
 		register int key = HASH_FUNC(str, len);
 
 		if (key <= MAX_HASH_VALUE && key >= 0) {
-			//register const char *s = wordlist[key];
 			register const char *s = keyword_list[key].keyword_str;
 			if (*str == *s && !strcmp (str + 1, s + 1)) {
 				return keyword_list[key].keyword_value;
@@ -162,7 +123,7 @@ int main(int argc, char **argv)
 {
 	int i = 0;
 	for (;i < MAX_HASH_VALUE; i++) {
-		printf("%s == %d\n", wordlist[i], HASH_FUNC(wordlist[i], strlen(wordlist[i])));
+		printf("%s == %d\n", keyword_list[i].keyword_str, HASH_FUNC(keyword_list[i].keyword_str, strlen(keyword_list[i].keyword_str)));
 	}
 	return 0;
 }
