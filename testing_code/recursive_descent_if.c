@@ -14,6 +14,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define ERROR_CODE 0
+#define ERROR_CODE1 1
+#define ERROR_CODE2 2
+#define ERROR_CODE3 3
+
+#define IS_ASCII_NUM(x) ({typeof(x) (__x) = (x);	\
+			(((__x) >= 0x30) && ((__x) <= 0x39)) ? 1 : 0;})
+
 char str[] = "if E then S else S";
 FILE *source;
 
@@ -42,13 +50,27 @@ static struct token_symbols {
 #pragma pack(8)
 
 enum token tok;
+
+void in_error(int flag)
+{
+	printf("error[%d]!\n", flag);
+	exit(-1);
+}
+
 void token_id(char *token_p)
 {
 	int i = 0;
+	int token_i = strlen(token_p) - 1;
 	for (; i < (sizeof(tokens)/sizeof(tokens[0])); i++) {
-		if (0 == strcmp(tokens[i].name, token_p))
+		if (0 == strcmp(tokens[i].name, token_p)) {
 			tok = tokens[i].token_value;
+			return;
+		}
 	}
+	while(token_i >= 0) {
+		IS_ASCII_NUM(*(token_p + token_i)) ? token_i-- : in_error(ERROR_CODE1) ;
+	}
+	tok = NUM;
 }
 
 void getToken(void)
@@ -71,9 +93,9 @@ void getToken(void)
 void eat(enum token t)
 {
 	if (tok == t) {
-		tok = getToken();
+		getToken();
 	} else {
-		error();
+		in_error(ERROR_CODE2);
 	}
 }
 
@@ -98,7 +120,7 @@ void S(void)
 		E();
 		break;
 	default:
-		error();
+		in_error(ERROR_CODE3);
 		break;
 	}
 }
@@ -115,7 +137,7 @@ void L(void)
 		L();
 		break;
 	default:
-		error();
+		in_error(ERROR_CODE);
 		break;
 	}
 }
@@ -129,5 +151,9 @@ void E(void)
 
 int main()
 {
+	getToken();
+	while (1) {
+		S();
+	}
 	return 0;
 }
