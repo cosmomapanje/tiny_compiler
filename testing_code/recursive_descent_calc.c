@@ -46,6 +46,7 @@
 static char input[256];
 static char *saveptr = input;
 static char this_char;
+static int result;
 
 void in_error(int flag)
 {
@@ -60,11 +61,11 @@ void getToken(void)
 	saveptr = input;
 }
 
-#if 0
-void eat(enum token t)
+#if 1
+void eat(char expected_char)
 {
-	if (tok == t) {
-		getToken();
+	if (expected_char == this_char) {
+		this_char = getchar();
 	} else {
 		in_error(ERROR_CODE2);
 	}
@@ -85,6 +86,7 @@ int F(void)
 	 */
 	int num = 0;
 	int temp = 0;
+	printf("this char = %c\n", this_char);
 	if ('(' == this_char) {
 		eat('(');
 		temp = E();
@@ -95,19 +97,22 @@ int F(void)
 		scanf("%d", &num);
 		this_char = getchar();
 	}
+	printf("num = %d\n", num);
 	return num;
 }
 
-int T_(void)
+void T_(void)
 {
 	switch (this_char) {
 	case '*':
-		F();
-		T_();
+		eat('*');
+		result *= F();
+		result *= T_();
 		break;
 	case '/':
-		F();
-		T_();
+		eat('/');
+		result /= F();
+		result /= T_();
 		break;
 	default:
 		break;
@@ -120,16 +125,18 @@ void T(void)
 	T_();
 }
 
-int E_(void)
+void E_(void)
 {
 	switch (this_char) {
 	case '+':
-		T();
-		E_();
+		eat('+');
+		result += T();
+		result += E_();
 		break;
 	case '-':
-		T();
-		E_();
+		eat('-');
+		result -= T();
+		result -= E_();
 		break;
 	default:
 		break;
@@ -149,10 +156,10 @@ void S(void)
 
 int main()
 {
-	//getToken();
-	while (1) {
-		//S();
-
+	this_char = getchar();
+	result = S();
+	if ('\n' == this_char) {
+	  printf("result = %d\n", result);
 	}
 	return 0;
 }
