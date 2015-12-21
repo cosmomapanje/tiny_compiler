@@ -1,3 +1,6 @@
+
+
+
 /*
  * S -> E $
  *
@@ -85,11 +88,10 @@ int F(void)
 	 * F -> (E)
 	 */
 	int num = 0;
-	int temp = 0;
 	printf("this char = %c\n", this_char);
 	if ('(' == this_char) {
 		eat('(');
-		temp = E();
+		num = E();
 		eat(')');
 	}
 	if (isdigit(this_char)) {
@@ -101,57 +103,65 @@ int F(void)
 	return num;
 }
 
-void T_(void)
+int T_(int temp)
 {
-	switch (this_char) {
-	case '*':
-		eat('*');
-		result *= F();
-		result *= T_();
-		break;
-	case '/':
-		eat('/');
-		result /= F();
-		result /= T_();
-		break;
-	default:
-		break;
+	int t = temp;
+	while ('*' == this_char || '/' == this_char) {
+		switch (this_char) {
+		case '*':
+			eat('*');
+			t *= F();
+			break;
+		case '/':
+			eat('/');
+			t /= F();
+			break;
+		default:
+			break;
+		}
 	}
+	return t;
 }
 
-void T(void)
+int T(void)
 {
-	F();
-	T_();
+	int temp = 0;
+	temp = F();
+	temp = T_(temp);
+	return temp;
 }
 
-void E_(void)
+int E_(int temp)
 {
-	switch (this_char) {
-	case '+':
-		eat('+');
-		result += T();
-		result += E_();
-		break;
-	case '-':
-		eat('-');
-		result -= T();
-		result -= E_();
-		break;
-	default:
-		break;
+	int t = temp;
+	while ('+' == this_char || '-' == this_char) {
+		switch (this_char) {
+		case '+':
+			eat('+');
+			t += T();
+			break;
+		case '-':
+			eat('-');
+			t -= T();
+			break;
+		default:
+			break;
+		}
 	}
+	return t;
 }
 
-void E(void)
+int E(void)
 {
-	T();
-	E_();
+	int temp = 0;
+	temp = T();
+	temp = E_(temp);
+	return temp;
 }
 
-void S(void)
+int S(void)
 {
-	E();
+	return E();
 }
 
 int main()
