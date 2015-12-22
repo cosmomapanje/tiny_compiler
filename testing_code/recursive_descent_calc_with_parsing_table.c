@@ -22,6 +22,28 @@
  *
  */
 
+/*
+ * 	nullable	FIRST		FOLLOW
+ * S	no		( id num
+ * E	no		( id num	) $
+ * E'	yes		+ -		) $
+ * T	no		( id num	) + - $
+ * T'	yes		* /		) + - $
+ * F	no		( id num	) * / + - $
+ */
+
+/*
+ * predictive parsing table
+ * 	+	-	*	/	id	num	(	)	$
+ * S	
+ * E
+ * E'
+ * T
+ * T'
+ * F
+ *
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
