@@ -1,0 +1,19 @@
+Micro definition
+1> The only date type is integer.
+2> All identifiers are implicitly declared and are no longer than 32 characters.
+   Identifiers must begin with a letter and are composed of letters, digits, and underscores.
+3> Literals are strings of digits.
+4> Comments begin with -- and end at the end of the current line.
+5> Statement types are
+   Assignment:
+	ID := Expression;
+	Expression is an infix expression constructed form identifiers, literals,
+	and the operators + and -; parentheses are also allowed;
+   Input/Output:
+	read(List of IDs);
+	write(List of Expressions);
+6> begin, end, read, and write are reserved words.
+7> Each statement is terminated by a semicolon (;). 
+   The body of a program is delimited by begin and end.
+8> A blank is appended to the right end of each source line;
+   thus tokens may not extend across line boundaries.
