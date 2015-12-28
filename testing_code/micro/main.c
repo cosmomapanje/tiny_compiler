@@ -2,9 +2,30 @@
 #include <ctype.h>
 #include "all.h"
 
+extern char token_buffer[];
+
+void program(void)
+{
+	/* <program> ::= BEGIN <statement list> END */
+	match(BEGIN);
+	statement_list();
+	match(END);
+}
+
+void system_goal(void)
+{
+	/* <system goal> ::= <program> SCANEOF */
+	program();
+	match(SCANEOF);
+}
+
 token scanner(void)
 {
 	int in_char, c;
+	clear_buffer();
+	if (feof(stdin)) {
+		return SCANEOF;
+	}
 
 	while ((in_char = getchar()) != EOF) {
 		if (isspace(in_char)) {
@@ -15,17 +36,21 @@ token scanner(void)
 			 *               | ID DIGIT
 			 *		   | ID UNDERSCORE
 			 */
-			for (c = getchar(); isalnum(c) || c == '_'; c = getchar())
-				;
+			buffer_char(in_char);
+			for (c = getchar(); isalnum(c) || c == '_'; c = getchar()) {
+				buffer_char(c);
+			}
 			ungetc(c, stdin);
-			return ID;
+			return check_reserved();
 		} else if (isdigit(in_char)) {
 			/* 
 			 * INTLITERAL ::= DIGIT |
 			 *                INTLITERAL DIGIT
 			 */
-			while (isdigit((c = getchar())))
-				;
+			buffer_char(in_char);
+			for (c = getchar(); isdigit(c); c = getchar()) {
+				buffer_char(c);
+			}
 			ungetc(c, stdin);
 			return INTLITERAL;
 		} else if (in_char == '(') {
@@ -41,6 +66,7 @@ token scanner(void)
 		} else if (in_char == ':') {
 			/* looking for ":=" */
 			c = getchar ();
+
 			if (c == '=') {
 				return ASSIGNOP;
 			} else {
@@ -51,7 +77,9 @@ token scanner(void)
 		  	/* looking for "--", comment start */
 			c = getchar ();
 			if (c == '-') {
-				while ((in_char = getchar()) != '\n');
+				do{
+					in_char = getchar();
+				} while (in_char != '\n');
 			} else {
 				ungetc(c, stdin);
 				return MINUSOP;
